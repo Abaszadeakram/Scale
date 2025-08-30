@@ -37,7 +37,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.scaleInfoContent = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -108,7 +108,7 @@
             this.button5.TabIndex = 4;
             this.button5.Text = "Kart qeydiyyatı";
             this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.button5.Click += new System.EventHandler(this.cardManagerClick);
             // 
             // button4
             // 
@@ -168,17 +168,17 @@
             // 
             // panel2
             // 
-            this.panel2.Location = new System.Drawing.Point(3, 63);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1160, 730);
-            this.panel2.TabIndex = 1;
+            this.scaleInfoContent.Location = new System.Drawing.Point(3, 63);
+            this.scaleInfoContent.Name = "panel2";
+            this.scaleInfoContent.Size = new System.Drawing.Size(1160, 730);
+            this.scaleInfoContent.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1167, 805);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.scaleInfoContent);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
@@ -200,7 +200,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel scaleInfoContent;
     }
 }
 
