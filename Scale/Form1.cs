@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ScaleManagment.Components;
+using ScaleManagment.Data;
 
 namespace ScaleManagment
 {
@@ -17,6 +19,18 @@ namespace ScaleManagment
         public Form1()
         {
             InitializeComponent();
+
+
+            using (var db = new AppDbContext())
+            {
+               
+                // İstifadəçiləri oxumaq
+                var cards = db.Cards.ToList();
+
+                var users = db.Users.ToList();
+                
+            }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -25,21 +39,21 @@ namespace ScaleManagment
             Label lblSearch = new Label();
             lblSearch.Text = "____________";
             lblSearch.Location = new Point(10, 10);
-            panel2.Controls.Add(lblSearch);
+            scaleInfoContent.Controls.Add(lblSearch);
 
             // Axtar Button
             Button btnSearch = new Button();
             //btnSearch.Image()
             btnSearch.Size = new Size(70, 25);
             btnSearch.Location = new Point(115, 7);
-            panel2.Controls.Add(btnSearch);
+            scaleInfoContent.Controls.Add(btnSearch);
 
             // İstifadəçini sil Button (sağ yuxarı)
             Button btnDelete = new Button();
             btnDelete.Text = "İstifadəçini sil";
             btnDelete.Size = new Size(120, 25);
-            btnDelete.Location = new Point(panel2.Width - 250, 7);
-            panel2.Controls.Add(btnDelete);
+            btnDelete.Location = new Point(scaleInfoContent.Width - 250, 7);
+            scaleInfoContent.Controls.Add(btnDelete);
 
             // Yeni istifadəçi Button (sağ yuxarıda, delete-in yanında)
             Button btnNew = new Button();
@@ -47,8 +61,8 @@ namespace ScaleManagment
 
             btnNew.Size = new Size(120, 25);
             btnNew.BackColor = Color.Orange;
-            btnNew.Location = new Point(panel2.Width - 125, 7);
-            panel2.Controls.Add(btnNew);
+            btnNew.Location = new Point(scaleInfoContent.Width - 125, 7);
+            scaleInfoContent.Controls.Add(btnNew);
 
             // ListView (orta hissədə)
             ListView listView = new ListView();
@@ -68,7 +82,7 @@ namespace ScaleManagment
             item1.SubItems.Add(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
             listView.Items.Add(item1);
 
-            panel2.Controls.Add(listView);
+            scaleInfoContent.Controls.Add(listView);
 
 
         }
@@ -76,7 +90,7 @@ namespace ScaleManagment
         private void button2_Click(object sender, EventArgs e)
         {
 
-            panel2.Controls.Clear();
+            scaleInfoContent.Controls.Clear();
 
             // Əsas Layout
             TableLayoutPanel tbl = new TableLayoutPanel();
@@ -143,12 +157,12 @@ namespace ScaleManagment
             tbl.SetColumnSpan(bottomPanel, 4);
 
             // Panel2-yə əlavə et
-            panel2.Controls.Add(tbl);
+            scaleInfoContent.Controls.Add(tbl);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            panel2.Controls.Clear();
+            scaleInfoContent.Controls.Clear();
 
             // Əsas Layout
             TableLayoutPanel mainLayout = new TableLayoutPanel();
@@ -244,12 +258,12 @@ namespace ScaleManagment
             mainLayout.Controls.Add(bottomPanel, 0, 2);
 
             // Panel2-yə əlavə et
-            panel2.Controls.Add(mainLayout);
+            scaleInfoContent.Controls.Add(mainLayout);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            panel2.Controls.Clear();
+            scaleInfoContent.Controls.Clear();
 
             // Əsas Layout
             TableLayoutPanel mainLayout = new TableLayoutPanel();
@@ -345,147 +359,20 @@ namespace ScaleManagment
             mainLayout.Controls.Add(bottomPanel, 0, 2);
 
             // Panel2-yə əlavə et
-            panel2.Controls.Add(mainLayout);
+            scaleInfoContent.Controls.Add(mainLayout);
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void cardManagerClick(object sender, EventArgs e)
         {
-
-
-            // Panel təmizlənir
-            panel2.Controls.Clear();
-
-            //
-            // ===== Yuxarı panel (Search + Buttons) =====
-            //
-            Panel topPanel = new Panel();
-            topPanel.Dock = DockStyle.Top;
-            topPanel.Height = 50;
-
-            TextBox txtSearch = new TextBox();
-            txtSearch.Width = 200;
-            txtSearch.Location = new Point(10, 12);
-            //txtSearch.PlaceholderText = "Axtarış edin"; // .NET 6+ üçün işləyir
-
-            Button btnDelete = new Button();
-            btnDelete.Text = "Kart sil";
-            btnDelete.Location = new Point(230, 10);
-            btnDelete.BackColor = Color.LightGray;
-
-            Button btnNew = new Button();
-            btnNew.Text = "Yeni kart";
-            btnNew.Location = new Point(310, 10);
-            btnNew.BackColor = Color.Gold;
-
-            topPanel.Controls.Add(txtSearch);
-            topPanel.Controls.Add(btnDelete);
-            topPanel.Controls.Add(btnNew);
-
-            //
-            // ===== Orta hissə (ListView) =====
-            //
-            ListView listView = new ListView();
-            listView.Dock = DockStyle.Fill;
-            listView.View = View.Details;
-            listView.FullRowSelect = true;
-            listView.GridLines = true;
-            listView.CheckBoxes = true; // Checkbox sütunu
-
-            // Sütunlar
-            listView.Columns.Add("", 30); // Checkbox üçün
-            listView.Columns.Add("Kart nömrəsi", 100);
-            listView.Columns.Add("Sürücü", 150);
-            listView.Columns.Add("Avtomobilin nömrəsi", 150);
-            listView.Columns.Add("Avtomobilin markası", 150);
-            listView.Columns.Add("Avtomobilin statusu", 150);
-            listView.Columns.Add("Grade", 150);
-
-            // Məlumat nümunələri
-            string[,] data =
-            {
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Aktiv", "High quality gold"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Deaktiv", "Low quality gold"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Deaktiv", "Medium"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Aktiv", "Waste"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Aktiv", "High quality gold"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Aktiv", "Medium"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Deaktiv", "Waste"},
-        {"4564564", "Royal Huseynov", "77JB456", "BMW", "Aktiv", "Medium"}
-    };
-
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                ListViewItem item = new ListViewItem(); // Checkbox üçün boş sütun
-                item.SubItems.Add(data[i, 0]);
-                item.SubItems.Add(data[i, 1]);
-                item.SubItems.Add(data[i, 2]);
-                item.SubItems.Add(data[i, 3]);
-                item.SubItems.Add(data[i, 4]);
-                item.SubItems.Add(data[i, 5]);
-                listView.Items.Add(item);
-            }
-
-            //
-            // ===== Alt panel (Pagination + Info) =====
-            //
-            Panel bottomPanel = new Panel();
-            bottomPanel.Dock = DockStyle.Bottom;
-            bottomPanel.Height = 50;
-
-            Label lblStatus = new Label();
-            lblStatus.Text = "Sütun sayı: " + listView.Items.Count.ToString();
-            lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(10, 15);
-
-            ComboBox cmbPageSize = new ComboBox();
-            cmbPageSize.Items.AddRange(new object[] { "10 / səhifə", "20 / səhifə", "50 / səhifə" });
-            cmbPageSize.SelectedIndex = 0;
-            cmbPageSize.Location = new Point(700, 12);
-
-            Label lblGoTo = new Label();
-            lblGoTo.Text = "Səhifəyə keç:";
-            lblGoTo.Location = new Point(820, 15);
-            lblGoTo.AutoSize = true;
-
-            TextBox txtPage = new TextBox();
-            txtPage.Width = 40;
-            txtPage.Location = new Point(900, 12);
-
-            // Pagination düymələri
-            Button btnFirst = new Button() { Text = "<<", Location = new Point(250, 12), Width = 40 };
-            Button btnPrev = new Button() { Text = "<", Location = new Point(295, 12), Width = 40 };
-            Button btn1 = new Button() { Text = "1", Location = new Point(340, 12), Width = 40 };
-            Button btn2 = new Button() { Text = "2", Location = new Point(385, 12), Width = 40 };
-            Button btn3 = new Button() { Text = "3", Location = new Point(430, 12), Width = 40 };
-            Button btnNext = new Button() { Text = ">", Location = new Point(475, 12), Width = 40 };
-            Button btnLast = new Button() { Text = ">>", Location = new Point(520, 12), Width = 40 };
-
-            bottomPanel.Controls.Add(lblStatus);
-            bottomPanel.Controls.Add(cmbPageSize);
-            bottomPanel.Controls.Add(lblGoTo);
-            bottomPanel.Controls.Add(txtPage);
-            bottomPanel.Controls.Add(btnFirst);
-            bottomPanel.Controls.Add(btnPrev);
-            bottomPanel.Controls.Add(btn1);
-            bottomPanel.Controls.Add(btn2);
-            bottomPanel.Controls.Add(btn3);
-            bottomPanel.Controls.Add(btnNext);
-            bottomPanel.Controls.Add(btnLast);
-
-            //
-            // ===== Panel2-yə yerləşdir =====
-            //
-            panel2.Controls.Add(listView);
-            panel2.Controls.Add(topPanel);
-            panel2.Controls.Add(bottomPanel);
+            CardManager.Init(scaleInfoContent);
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
 
             // panel2 təmizlə
-            panel2.Controls.Clear();
-            panel2.AutoScroll = true;
+            scaleInfoContent.Controls.Clear();
+            scaleInfoContent.AutoScroll = true;
 
             //
             // === Yuxarı filter paneli ===
@@ -494,7 +381,7 @@ namespace ScaleManagment
             topPanel.Dock = DockStyle.Top;
             topPanel.Height = 50;
 
-           
+
             Button btnExport = new Button()
             {
                 Text = "Export",
@@ -524,7 +411,7 @@ namespace ScaleManagment
                 Width = 100
             };
 
-           
+
             topPanel.Controls.Add(btnExport);
             topPanel.Controls.Add(btnDelete);
             topPanel.Controls.Add(btnEdit);
@@ -623,9 +510,9 @@ namespace ScaleManagment
             //
             // === Panel2-yə əlavə et ===
             //
-            panel2.Controls.Add(listView);
-            panel2.Controls.Add(statsPanel);
-            panel2.Controls.Add(topPanel);
+            scaleInfoContent.Controls.Add(listView);
+            scaleInfoContent.Controls.Add(statsPanel);
+            scaleInfoContent.Controls.Add(topPanel);
         }
     }
 }
