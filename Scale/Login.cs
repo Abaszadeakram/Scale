@@ -24,5 +24,10 @@ namespace TereziEla
             this.Hide();
             form1.ShowDialog();
         }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

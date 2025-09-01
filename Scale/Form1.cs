@@ -18,6 +18,9 @@ namespace ScaleManagment
     {
         private object label1;
         public ListView listView;
+        private TextBox txtSearch;
+
+        public object FlatAppearance { get; private set; }
 
         public Form1()
         {
@@ -38,18 +41,16 @@ namespace ScaleManagment
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // Label - Axtarış edin
-            Label lblSearch = new Label();
-            lblSearch.Text = "____________";
-            lblSearch.Location = new Point(10, 10);
-            scaleInfoContent.Controls.Add(lblSearch);
+            txtSearch = new TextBox();
+            txtSearch.Text = "Axtarış edin";
+            txtSearch.ForeColor = Color.Gray;
+            txtSearch.Location = new Point(20, 20);
+            txtSearch.Width = 200;
 
-            // Axtar Button
-            Button btnSearch = new Button();
-            //btnSearch.Image()
-            btnSearch.Size = new Size(70, 25);
-            btnSearch.Location = new Point(115, 7);
-            scaleInfoContent.Controls.Add(btnSearch);
+            // Event-lər əlavə olunur
+            txtSearch.GotFocus += RemoveText;
+            txtSearch.LostFocus += AddText;
+
 
             // İstifadəçini sil Button (sağ yuxarı)
             Button btnDelete = new Button();
@@ -88,7 +89,7 @@ namespace ScaleManagment
 
                 scaleInfoContent.Controls.Add(listView);
 
-                string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
+                string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -113,6 +114,24 @@ namespace ScaleManagment
             }
 
 
+        }
+
+        private void AddText(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text))
+            {
+                txtSearch.Text = "Axtarış edin";
+                txtSearch.ForeColor = Color.Gray;
+            }
+        }
+
+        private void RemoveText(object sender, EventArgs e)
+        {
+            if (txtSearch.Text == "Axtarış edin")
+            {
+                txtSearch.Text = "";
+                txtSearch.ForeColor = Color.Black;
+            }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -147,6 +166,23 @@ namespace ScaleManagment
         }
 
 
+
+        public void AddToList(string kartNo, string ad, string soyad,
+                         string avtoNo, string marka,
+                         string mensubiyyet, string status, string grade)
+        {
+            ListViewItem item = new ListViewItem(""); // checkbox üçün boş sütun
+
+            item.SubItems.Add(kartNo);
+            item.SubItems.Add(ad + " " + soyad);
+            item.SubItems.Add(avtoNo);
+            item.SubItems.Add(marka);
+            item.SubItems.Add(mensubiyyet);
+            item.SubItems.Add(status);
+            item.SubItems.Add(grade);
+
+            listView.Items.Add(item);
+        }
 
 
 
@@ -201,20 +237,68 @@ namespace ScaleManagment
 
             Label lblRfid = new Label
             {
-                Text = "RFID status:   ● Oxuyucuya bağlı",
+                Text = "RFID status: ",
+                ForeColor = Color.Black,
+                Font = labelFont,
+                AutoSize = true,
+                Location = new Point(12, 12)
+            };
+            Label lblOxuyucuyabagli = new Label
+            {
+                Text = " ● Oxuyucuya bağlı",
                 ForeColor = Color.Green,
                 Font = labelFont,
                 AutoSize = true,
-                Location = new Point(10, 10)
+                Location = new Point(lblRfid.Right+3,lblRfid.Top)
             };
             bottomPanel.Controls.Add(lblRfid);
+            bottomPanel.Controls.Add(lblOxuyucuyabagli);
+
+
+            RadioButton toggle = new RadioButton
+            {
+                Appearance = Appearance.Button,
+                Text = "Avtomatik",
+                TextAlign = ContentAlignment.MiddleCenter,
+                FlatStyle = FlatStyle.Flat,
+                Width = 100,
+                Height = 30,
+                Location = new Point(lblOxuyucuyabagli.Right+190,lblOxuyucuyabagli.Top)
+            };
+
+            toggle.FlatAppearance.BorderSize = 0;
+
+            // Event
+            toggle.CheckedChanged += (s, args) =>
+            {
+                if (toggle.Checked)
+                {
+                    toggle.BackColor = Color.Green;
+                    toggle.ForeColor = Color.White;
+                    toggle.Text = "ON";
+                }
+                else
+                {
+                    toggle.BackColor = Color.Red;
+                    toggle.ForeColor = Color.White;
+                    toggle.Text = "OFF";
+                }
+            };
+
+            // Formaya əlavə et
+            bottomPanel.Controls.Add(toggle);
+
+
+
+            //toggle.BackColor = toggle.Checked ? Color.Gold : Color.LightGray;
 
             // Düymələr
-            Button btnBagla = new Button { Text = "Bağla", ForeColor = Color.Red, FlatStyle = FlatStyle.Flat, Location = new Point(300, 5), Width = 80 };
-            Button btnAc = new Button { Text = "Aç", ForeColor = Color.Green, FlatStyle = FlatStyle.Flat, Location = new Point(390, 5), Width = 80 };
-            Button btnTara = new Button { Text = "Tara", FlatStyle = FlatStyle.Flat, Location = new Point(480, 5), Width = 80 };
-            Button btnTesdiqla = new Button { Text = "Təsdiqlə", BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(570, 5), Width = 100 };
-            Button btnOxucu = new Button { Text = "Oxucuya bağlan", BackColor = Color.Goldenrod, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(680, 5), Width = 140 };
+            Button btnBagla = new Button { Text = "Bağla", ForeColor = Color.Red, FlatStyle = FlatStyle.Flat, Location = new Point(515, 15), Width = 50 };
+            Button btnAc = new Button { Text = "Aç", ForeColor = Color.Green, FlatStyle = FlatStyle.Flat, Location = new Point(580, 15), Width = 30 };
+            Button btnTara = new Button { Text = "Tara", FlatStyle = FlatStyle.Flat,  Location = new Point(600, 15), Width = 60 };
+            btnTara.FlatAppearance.BorderSize = 0;
+            Button btnTesdiqla = new Button { Text = "Təsdiqlə", BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(660, 15), Width = 80 };
+            Button btnOxucu = new Button { Text = "Oxucuya bağlan", BackColor = Color.Goldenrod, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(750, 15), Width = 100 };
 
             bottomPanel.Controls.AddRange(new Control[] { btnBagla, btnAc, btnTara, btnTesdiqla, btnOxucu });
 
@@ -280,7 +364,7 @@ namespace ScaleManagment
             listView.Columns.Add("Post", 140);
             listView.Columns.Add("Maşın nömrəsi", 100);
 
-            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -407,7 +491,7 @@ namespace ScaleManagment
             listView.Columns.Add("Post", 120);
             listView.Columns.Add("Maşın nömrəsi", 100);
 
-            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -586,16 +670,16 @@ namespace ScaleManagment
 
             // Sütunlar
             listView.Columns.Add("ID", 50);
-            listView.Columns.Add("Kart", 100);
-            listView.Columns.Add("Avto markası", 100);
-            listView.Columns.Add("Avto nişanı", 100);
-            listView.Columns.Add("Yüklü çəki", 100);
-            listView.Columns.Add("Yüklü tarix", 150);
-            listView.Columns.Add("Boş çəki", 100);
-            listView.Columns.Add("Boş tarix", 150);
-            listView.Columns.Add("Xammal çəki", 100);
-            listView.Columns.Add("Xammal növü", 150);
-            listView.Columns.Add("Tərəzi", 120);
+            listView.Columns.Add("Kart", 80);
+            listView.Columns.Add("Avto markası", 80);
+            listView.Columns.Add("Avto nişanı", 80);
+            listView.Columns.Add("Yüklü çəki", 70);
+            listView.Columns.Add("Yüklü tarix", 110);
+            listView.Columns.Add("Boş çəki", 70);
+            listView.Columns.Add("Boş tarix", 100);
+            listView.Columns.Add("Xammal çəki", 70);
+            listView.Columns.Add("Xammal növü", 90);
+            listView.Columns.Add("Tərəzi", 110);
 
             // Məlumat nümunəsi
             string[,] data =
@@ -632,6 +716,9 @@ namespace ScaleManagment
             throw new NotImplementedException();
         }
 
-       
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

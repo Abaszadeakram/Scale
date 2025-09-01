@@ -43,7 +43,7 @@ namespace TereziEla
             }
 
            
-            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
             string istiafadeciadi= textBox1.Text.Trim();
 
             if (string.IsNullOrEmpty(istiafadeciadi))

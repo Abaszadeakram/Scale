@@ -5,8 +5,10 @@ using TereziEla;
 
 namespace ScaleManagment.Components
 {
-    internal class CardManager
+    public class CardManager
     {
+        
+
         public static void Init(Panel scaleInfoContent)
         {
 
@@ -42,7 +44,7 @@ namespace ScaleManagment.Components
         }
 
         #region private methods
-        private static void InitTopPanel(Panel topPanel)
+        private static  void InitTopPanel(Panel topPanel)
         {
 
             topPanel.Dock = DockStyle.Top;
@@ -58,28 +60,35 @@ namespace ScaleManagment.Components
             btnDelete.Location = new Point(700, 10);
             btnDelete.BackColor = Color.LightGray;
 
-            Button btnNew = new Button();
-            btnNew.Text = "Yeni kart";
-            btnNew.Location = new Point(780, 10);
-            btnNew.BackColor = Color.Gold;
+            Button btnNewww = new Button();
+            btnNewww.Text = "Yeni kart";
+            btnNewww.Location = new Point(780, 10);
+            btnNewww.BackColor = Color.Gold;
 
-             btnNew.Click += new EventHandler(btnNew_Click);
+            //btnNewww.Click += new EventHandler(btnNewww_Click);
 
 
 
             topPanel.Controls.Add(txtSearch);
             topPanel.Controls.Add(btnDelete);
-            topPanel.Controls.Add(btnNew);
+            topPanel.Controls.Add(btnNewww);
 
         }
 
-        private static void btnNew_Click(object sender, EventArgs e)
+        private  void btnNewww_Click(object sender, EventArgs e)
         {
-            AddCard addCard = new AddCard();
+            AddCard addCard = new AddCard(this);
             addCard.ShowDialog();
         }
 
-        private static void InitBottomnPanel(Panel bottomPanel, ListView listView)
+        //private void btnNeww_Click(object sender, EventArgs e)
+        //{
+        //    
+        //}
+
+
+
+        private static  void InitBottomnPanel(Panel bottomPanel, ListView listView)
         {
             bottomPanel.Dock = DockStyle.Bottom;
             bottomPanel.Height = 50;
@@ -125,7 +134,7 @@ namespace ScaleManagment.Components
             bottomPanel.Controls.Add(btnLast);
         }
 
-        private static void InitBottomData(ListView listView)
+        private static  void InitBottomData(ListView listView)
         {
             listView.Dock = DockStyle.Fill;
             listView.View = View.Details;

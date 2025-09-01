@@ -1,4 +1,5 @@
 ﻿using ScaleManagment;
+using ScaleManagment.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,26 +15,22 @@ namespace TereziEla
 {
     public partial class AddCard : Form
     {
-        public string KartNomresi { get; private set; }
-        public string SurucuAdi { get; private set; }
-        public string SurucuSoyadi { get; private set; }
-        public string AvtomobilNomresi { get; private set; }
-        public string AvtomobilMarkasi { get; private set; }
-        public string AvtomobilMansubiyyati { get; private set; }
-        public string Status { get; private set; }
-        public string Grade { get; private set; }
+        private Form1 mainForm;
+        
 
-
-
-
-        public AddCard()
+        public AddCard(Form1 form)
         {
             InitializeComponent();
-          
+            mainForm = form;
+
         }
 
+        public AddCard(CardManager cardManager)
+        {
+            CardManager = cardManager;
+        }
 
-
+        public CardManager CardManager { get; }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -42,18 +39,19 @@ namespace TereziEla
 
         private void button2_Click(object sender, EventArgs e)
         {
-            KartNomresi = textBox1.Text;
-            SurucuAdi = textBox2.Text;
-            SurucuSoyadi = textBox3.Text;
-            AvtomobilNomresi = textBox4.Text;
-            AvtomobilMarkasi = textBox5.Text;
-            AvtomobilMansubiyyati = textBox6.Text;
-            Status = textBox7.Text;
-            Grade = textBox8.Text;
+            // TextBox-ları oxuyuruq və Form1-ə göndəririk
+            mainForm.AddToList(
+                textBox1.Text,
+                textBox2.Text,
+               textBox3.Text,
+                textBox4.Text,
+                textBox5.Text,
+                textBox6.Text,
+                textBox7.Text,
+               textBox8.Text
+            );
 
-            this.DialogResult = DialogResult.OK;
             this.Close();
-
             // Bu formu bağla
         }
     }
