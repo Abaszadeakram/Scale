@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
+using TereziEla;
 
 namespace ScaleManagment.Components
 {
@@ -53,18 +55,28 @@ namespace ScaleManagment.Components
 
             Button btnDelete = new Button();
             btnDelete.Text = "Kart sil";
-            btnDelete.Location = new Point(230, 10);
+            btnDelete.Location = new Point(700, 10);
             btnDelete.BackColor = Color.LightGray;
 
             Button btnNew = new Button();
             btnNew.Text = "Yeni kart";
-            btnNew.Location = new Point(310, 10);
+            btnNew.Location = new Point(780, 10);
             btnNew.BackColor = Color.Gold;
+
+             btnNew.Click += new EventHandler(btnNew_Click);
+
+
 
             topPanel.Controls.Add(txtSearch);
             topPanel.Controls.Add(btnDelete);
             topPanel.Controls.Add(btnNew);
 
+        }
+
+        private static void btnNew_Click(object sender, EventArgs e)
+        {
+            AddCard addCard = new AddCard();
+            addCard.ShowDialog();
         }
 
         private static void InitBottomnPanel(Panel bottomPanel, ListView listView)

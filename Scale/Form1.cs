@@ -1,20 +1,23 @@
-﻿using System;
+﻿using ScaleManagment.Components;
+using ScaleManagment.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ScaleManagment.Components;
-using ScaleManagment.Data;
+using TereziEla;
 
 namespace ScaleManagment
 {
     public partial class Form1 : Form
     {
         private object label1;
+        public ListView listView;
 
         public Form1()
         {
@@ -25,9 +28,9 @@ namespace ScaleManagment
             {
                
                 // İstifadəçiləri oxumaq
-                var cards = db.Cards.ToList();
+                //var cards = db.Cards.ToList();
 
-                var users = db.Users.ToList();
+                //var users = db.Users.ToList();
                 
             }
 
@@ -55,6 +58,8 @@ namespace ScaleManagment
             btnDelete.Location = new Point(scaleInfoContent.Width - 250, 7);
             scaleInfoContent.Controls.Add(btnDelete);
 
+            btnDelete.Click += new EventHandler(btnDelete_Click);
+
             // Yeni istifadəçi Button (sağ yuxarıda, delete-in yanında)
             Button btnNew = new Button();
             btnNew.Text = "Yeni istifadəçi";
@@ -64,28 +69,88 @@ namespace ScaleManagment
             btnNew.Location = new Point(scaleInfoContent.Width - 125, 7);
             scaleInfoContent.Controls.Add(btnNew);
 
+            btnNew.Click += new EventHandler(btnNew_Click);
+
+
+
             // ListView (orta hissədə)
-            ListView listView = new ListView();
-            listView.View = View.Details;
-            listView.FullRowSelect = true;
-            listView.GridLines = true;
-            listView.Size = new Size(1150, 730);
-            listView.Location = new Point(10, 40);
+            if (listView == null)
+            {
+                listView = new ListView();
+                listView.View = View.Details;
+                listView.FullRowSelect = true;
+                listView.GridLines = true;
+                listView.Size = new Size(1150, 730);
+                listView.Location = new Point(10, 40);
 
-            // Sütunlar
-            listView.Columns.Add("İstifadəçi adı", 570);
-            listView.Columns.Add("Yaradılma tarixi", 570);
+                listView.Columns.Add("İstifadəçi adı", 570);
+                listView.Columns.Add("Yaradılma tarixi", 570);
 
+                scaleInfoContent.Controls.Add(listView);
 
-            // Məsələn test üçün sətir əlavə edək
-            ListViewItem item1 = new ListViewItem("Akram");
-            item1.SubItems.Add(DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
-            listView.Items.Add(item1);
+                string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
 
-            scaleInfoContent.Controls.Add(listView);
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "select*from dbo.tblDatas";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string name = reader["Istifadeci adi"].ToString();
+                        DateTime date = Convert.ToDateTime(reader["Yaradilma tarixi"]);
+                        //listView = new ListView();
+                        ListViewItem item = new ListViewItem(name);
+                        item.SubItems.Add(date.ToString("dd.MM.yyyy HH:mm"));
+                        listView.Items.Add(item);
+                    }
+
+                    reader.Close();
+                }
+            }
 
 
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        public void AddUserToListView(string username)
+        {
+            if (listView == null)
+            {
+                MessageBox.Show("ListView hələ yaradılmayıb!");
+                return;
+            }
+
+            string date = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            ListViewItem item = new ListViewItem(username);
+            item.SubItems.Add(date);
+            listView.Items.Add(item);
+        }
+
+
+
+
+
+
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            AddUserForm addUserForm = new AddUserForm(this); // <-- this = Form1 obyekti
+            addUserForm.ShowDialog();
+        }
+
+
+
+
+
+
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -179,6 +244,7 @@ namespace ScaleManagment
             {
                 //PlaceholderText = "Axtarış edin",
                 Location = new Point(10, 8),
+
                 Width = 200
             };
 
@@ -204,34 +270,58 @@ namespace ScaleManagment
             };
 
             // Sütunlar
-            listView.Columns.Add("Giriş çəkisi", 100);
-            listView.Columns.Add("Çıxış çəkisi", 100);
-            listView.Columns.Add("Ümumi çəki", 100);
-            listView.Columns.Add("Giriş tarixi", 150);
-            listView.Columns.Add("Çıxış tarixi", 150);
-            listView.Columns.Add("Kart", 100);
-            listView.Columns.Add("Grade", 150);
-            listView.Columns.Add("Post", 150);
-            listView.Columns.Add("Maşın nömrəsi", 120);
+            listView.Columns.Add("Giriş çəkisi", 80);
+            listView.Columns.Add("Çıxış çəkisi", 80);
+            listView.Columns.Add("Ümumi çəki", 80);
+            listView.Columns.Add("Giriş tarixi", 100);
+            listView.Columns.Add("Çıxış tarixi", 100);
+            listView.Columns.Add("Kart", 80);
+            listView.Columns.Add("Grade", 100);
+            listView.Columns.Add("Post", 140);
+            listView.Columns.Add("Maşın nömrəsi", 100);
 
-            // Demo datalar (test üçün)
-            string[,] data =
-            {
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","High quality gold","Azermining Group3","77JB456"},
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","Low quality gold","Azermining Group3","77JB456"},
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","Medium","Azermining Group3","77JB456"},
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","Waste","Azermining Group3","77JB456"}
-    };
+            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
 
-            for (int i = 0; i < data.GetLength(0); i++)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                ListViewItem item = new ListViewItem(data[i, 0]); // Giriş çəkisi
-                for (int j = 1; j < data.GetLength(1); j++)
+                conn.Open();
+                string query = "select*from dbo.gates";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    item.SubItems.Add(data[i, j]);
+                    string giris = reader["weight_in"].ToString();
+                    string cixis = reader["weight_out"].ToString();
+                    string umumiceki = reader["weight_total"].ToString();
+
+                    DateTime girisTarixi = Convert.ToDateTime(reader["data_in"]);
+                    DateTime cixisTarixi = Convert.ToDateTime(reader["data_out"]);
+
+                    string kart = reader["card"].ToString();
+                    string grade = reader["sort"].ToString();
+                    string post = reader["post"].ToString();
+                    string masin = reader["carnumber"].ToString();
+
+                    ListViewItem item = new ListViewItem(giris);
+                    item.SubItems.Add(cixis);
+                    item.SubItems.Add(umumiceki);
+                    item.SubItems.Add(girisTarixi.ToString("dd.MM.yyyy HH:mm"));
+                    item.SubItems.Add(cixisTarixi.ToString("dd.MM.yyyy HH:mm"));
+                    item.SubItems.Add(kart);
+                    item.SubItems.Add(grade);
+                    item.SubItems.Add(post);
+                    item.SubItems.Add(masin);
+
+                    listView.Items.Add(item);
                 }
-                listView.Items.Add(item);
+
+                reader.Close();
             }
+            // Demo datalar (test üçün)
+
+
 
             // --- ALT HİSSƏ (Sütun sayı + səhifələmə)
             Panel bottomPanel = new Panel { Dock = DockStyle.Fill };
@@ -260,6 +350,8 @@ namespace ScaleManagment
             // Panel2-yə əlavə et
             scaleInfoContent.Controls.Add(mainLayout);
         }
+
+
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -305,35 +397,55 @@ namespace ScaleManagment
             };
 
             // Sütunlar
-            listView.Columns.Add("Giriş çəkisi", 100);
-            listView.Columns.Add("Çıxış çəkisi", 100);
-            listView.Columns.Add("Ümumi çəki", 100);
-            listView.Columns.Add("Giriş tarixi", 150);
-            listView.Columns.Add("Çıxış tarixi", 150);
-            listView.Columns.Add("Kart", 100);
-            listView.Columns.Add("Grade", 150);
-            listView.Columns.Add("Post", 150);
-            listView.Columns.Add("Maşın nömrəsi", 120);
+            listView.Columns.Add("Giriş çəkisi", 80);
+            listView.Columns.Add("Çıxış çəkisi", 80);
+            listView.Columns.Add("Ümumi çəki", 80);
+            listView.Columns.Add("Giriş tarixi", 110);
+            listView.Columns.Add("Çıxış tarixi", 110);
+            listView.Columns.Add("Kart", 80);
+            listView.Columns.Add("Grade", 100);
+            listView.Columns.Add("Post", 120);
+            listView.Columns.Add("Maşın nömrəsi", 100);
 
-            // Demo datalar (test üçün)
-            string[,] data =
-            {
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","High quality gold","Azermining Group3","77JB456"},
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","Low quality gold","Azermining Group3","77JB456"},
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","Medium","Azermining Group3","77JB456"},
-        {"564","564","1096","18.01.2025 06:59","18.01.2025 06:59","4564564","Waste","Azermining Group3","77JB456"}
-    };
+            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Akram2025;Encrypt=True;TrustServerCertificate=True;";
 
-            for (int i = 0; i < data.GetLength(0); i++)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                ListViewItem item = new ListViewItem(data[i, 0]); // Giriş çəkisi
-                for (int j = 1; j < data.GetLength(1); j++)
+                conn.Open();
+                string query = "select*from dbo.gates";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    item.SubItems.Add(data[i, j]);
-                }
-                listView.Items.Add(item);
-            }
+                    string giris = reader["weight_in"].ToString();
+                    string cixis = reader["weight_out"].ToString();
+                    string umumiceki = reader["weight_total"].ToString();
 
+                    DateTime girisTarixi = Convert.ToDateTime(reader["data_in"]);
+                    DateTime cixisTarixi = Convert.ToDateTime(reader["data_out"]);
+
+                    string kart = reader["card"].ToString();
+                    string grade = reader["sort"].ToString();
+                    string post = reader["post"].ToString();
+                    string masin = reader["carnumber"].ToString();
+
+                    ListViewItem item = new ListViewItem(giris);
+                    item.SubItems.Add(cixis);
+                    item.SubItems.Add(umumiceki);
+                    item.SubItems.Add(girisTarixi.ToString("dd.MM.yyyy HH:mm"));
+                    item.SubItems.Add(cixisTarixi.ToString("dd.MM.yyyy HH:mm"));
+                    item.SubItems.Add(kart);
+                    item.SubItems.Add(grade);
+                    item.SubItems.Add(post);
+                    item.SubItems.Add(masin);
+
+                    listView.Items.Add(item);
+                }
+
+                reader.Close();
+            }
             // --- ALT HİSSƏ (Sütun sayı + səhifələmə)
             Panel bottomPanel = new Panel { Dock = DockStyle.Fill };
 
@@ -514,5 +626,12 @@ namespace ScaleManagment
             scaleInfoContent.Controls.Add(statsPanel);
             scaleInfoContent.Controls.Add(topPanel);
         }
+
+        internal void AddUserToListView(string userName, string creationDate)
+        {
+            throw new NotImplementedException();
+        }
+
+       
     }
 }
