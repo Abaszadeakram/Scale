@@ -41,33 +41,75 @@ namespace ScaleManagment
 
         private void button1_Click(object sender, EventArgs e)
         {
-            txtSearch = new TextBox();
-            txtSearch.Text = "Axtarış edin";
-            txtSearch.ForeColor = Color.Gray;
-            txtSearch.Location = new Point(20, 20);
-            txtSearch.Width = 200;
+            TextBox searchBox = new TextBox();
+            searchBox.Size = new Size(130, 40);
+            searchBox.BorderStyle = BorderStyle.None;
+            searchBox.Location = new Point(scaleInfoContent.Width - 870, 7);
 
-            // Event-lər əlavə olunur
-            txtSearch.GotFocus += RemoveText;
-            txtSearch.LostFocus += AddText;
+            // İlk olaraq placeholder mətni əlavə edirik
+            searchBox.Text = "Axtarış edin";
+            searchBox.ForeColor = Color.Gray;  // Placeholder mətni üçün açıq rəng
+
+            // TextBox daxil edildikdə placeholder mətni silinir
+            searchBox.Enter += (s, ev) =>
+            {
+                if (searchBox.Text == "Axtarış edin")
+                {
+                    searchBox.Text = "";
+                    searchBox.ForeColor = Color.Black;  // Mətn daxil edildikdə rəng qara olur
+                }
+            };
+
+            // TextBox-dan çıxıldıqda, əgər istifadəçi heç bir şey daxil etməyibsə, placeholder yenidən görünür
+            searchBox.Leave += (s, ev) =>
+            {
+                if (string.IsNullOrWhiteSpace(searchBox.Text))
+                {
+                    searchBox.Text = "Axtarış edin";
+                    searchBox.ForeColor = Color.Gray;  // Placeholder rəngi yenidən açıq olur
+                }
+            };
+
+            scaleInfoContent.Controls.Add(searchBox);  // TextBox-u forma əlavə et
+            searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
+
+            PictureBox searchIcon = new PictureBox();
+            //searchIcon.Image = Image.FromFile("search-icon-png"); // Simgeyi yükləyin
+            searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; // Simgeyi uyğun ölçüdə göstər
+            searchIcon.Size = new Size(20, 20); // Simge ölçüsü
+            searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y + 10); // Simgeyi düzgün yerdə yerləşdir
+
+            // Simgeyə klikləmə hadisəsi əlavə et
+            searchIcon.Click += (s, ev) =>
+            {
+                MessageBox.Show("Axtarış etmək üçün simgeyə basıldı!");
+            };
+
+            // Simgeyi formaya əlavə et
+            scaleInfoContent.Controls.Add(searchIcon);
 
 
             // İstifadəçini sil Button (sağ yuxarı)
             Button btnDelete = new Button();
             btnDelete.Text = "İstifadəçini sil";
-            btnDelete.Size = new Size(120, 25);
+            btnDelete.Size = new Size(120, 32);
             btnDelete.Location = new Point(scaleInfoContent.Width - 250, 7);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.FlatAppearance.BorderSize = 0;
             scaleInfoContent.Controls.Add(btnDelete);
 
             btnDelete.Click += new EventHandler(btnDelete_Click);
 
             // Yeni istifadəçi Button (sağ yuxarıda, delete-in yanında)
             Button btnNew = new Button();
-            btnNew.Text = "Yeni istifadəçi";
+            btnNew.Text = "+Yeni istifadəçi";
 
-            btnNew.Size = new Size(120, 25);
-            btnNew.BackColor = Color.Orange;
+            btnNew.Size = new Size(120, 32);
+            btnNew.BackColor = Color.FromArgb(223,199,76);
             btnNew.Location = new Point(scaleInfoContent.Width - 125, 7);
+            btnNew.ForeColor = Color.White;
+            btnNew.FlatStyle = FlatStyle.Flat;
+            btnNew.FlatAppearance.BorderSize = 0;
             scaleInfoContent.Controls.Add(btnNew);
 
             btnNew.Click += new EventHandler(btnNew_Click);
@@ -81,11 +123,30 @@ namespace ScaleManagment
                 listView.View = View.Details;
                 listView.FullRowSelect = true;
                 listView.GridLines = true;
-                listView.Size = new Size(1150, 730);
+                listView.Size = new Size(1150, 600);
                 listView.Location = new Point(10, 40);
+                listView.CheckBoxes = true;
 
-                listView.Columns.Add("İstifadəçi adı", 570);
-                listView.Columns.Add("Yaradılma tarixi", 570);
+                listView.Columns.Add("İstifadəçi adı", 90, HorizontalAlignment.Left);
+                listView.Columns.Add("Yaradılma tarixi", 670, HorizontalAlignment.Center);
+
+                listView.OwnerDraw = true;
+
+                listView.DrawColumnHeader += (s, args) =>
+                {
+                    using (Font f = new Font("Segoe UI", 10, FontStyle.Bold)) // Bold font
+                    using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    {
+                        args.Graphics.FillRectangle(Brushes.White, args.Bounds); // ağ fon
+                        args.Graphics.DrawRectangle(Pens.LightGray, args.Bounds); // çərçivə xətti
+                        args.Graphics.DrawString(args.Header.Text, f, Brushes.Black, args.Bounds, sf); // mərkəzdə qara bold yazı
+                    }
+                };
+
+                // Item və SubItem-lar default göstərilsin
+                listView.DrawItem += (s, args) => args.DrawDefault = true;
+                listView.DrawSubItem += (s, args) => args.DrawDefault = true;
+
 
                 scaleInfoContent.Controls.Add(listView);
 
@@ -111,27 +172,52 @@ namespace ScaleManagment
 
                     reader.Close();
                 }
+
+
+                Panel bottomPanel = new Panel
+                {
+                    Dock = DockStyle.Bottom,
+                    Height = 40
+                };
+
+                // Sətir sayı label
+                Label lblCount = new Label
+                {
+                    Text = "Sətir sayı: " + listView.Items.Count,
+                    Location = new Point(12, -2),
+                    AutoSize = true
+                };
+
+                // Səhifələmə düymələri
+                Button btnPrev = new Button { Text = "<", Location = new Point(300, -2), Width = 40 };
+                Button btnPage1 = new Button { Text = "1", Location = new Point(350, -2), Width = 40 };
+                Button btnPage2 = new Button { Text = "2", Location = new Point(400, -2), Width = 40 };
+                Button btnPage3 = new Button { Text = "3", Location = new Point(400, -2), Width = 40 };
+                Button btnPage4 = new Button { Text = "4", Location = new Point(400, -2), Width = 40 };
+                Button btnNext = new Button { Text = ">", Location = new Point(450, -2), Width = 40 };
+
+
+                // Kontrol əlavə et
+                bottomPanel.Controls.Add(lblCount);
+                bottomPanel.Controls.Add(btnPrev);
+                bottomPanel.Controls.Add(btnPage1);
+                bottomPanel.Controls.Add(btnPage2);
+                bottomPanel.Controls.Add(btnPage3);
+                bottomPanel.Controls.Add(btnPage4);
+                bottomPanel.Controls.Add(btnNext);
+
+                this.Controls.Add(bottomPanel);
             }
-
-
         }
 
-        private void AddText(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtSearch.Text))
-            {
-                txtSearch.Text = "Axtarış edin";
-                txtSearch.ForeColor = Color.Gray;
-            }
-        }
+        
 
-        private void RemoveText(object sender, EventArgs e)
+        private void SearchBox_TextChanged(object sender, EventArgs e)
         {
-            if (txtSearch.Text == "Axtarış edin")
-            {
-                txtSearch.Text = "";
-                txtSearch.ForeColor = Color.Black;
-            }
+            TextBox textBox = sender as TextBox;
+            string searchQuery = textBox.Text;
+
+            // Axtarış sorğusuna uyğun əməliyyatları buraya əlavə edin
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -558,10 +644,7 @@ namespace ScaleManagment
             scaleInfoContent.Controls.Add(mainLayout);
         }
 
-        private void cardManagerClick(object sender, EventArgs e)
-        {
-            CardManager.Init(scaleInfoContent);
-        }
+        
 
         private void button7_Click(object sender, EventArgs e)
         {
@@ -716,9 +799,135 @@ namespace ScaleManagment
             throw new NotImplementedException();
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
 
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            scaleInfoContent.Controls.Clear();
+
+
+            TextBox searchBox = new TextBox();
+            searchBox.Size = new Size(130, 40);
+            searchBox.BorderStyle = BorderStyle.None;
+            searchBox.Location = new Point(scaleInfoContent.Width - 870, 7);
+
+            // İlk olaraq placeholder mətni əlavə edirik
+            searchBox.Text = "Axtarış edin";
+            searchBox.ForeColor = Color.Gray;  // Placeholder mətni üçün açıq rəng
+
+            // TextBox daxil edildikdə placeholder mətni silinir
+            searchBox.Enter += (s, ev) =>
+            {
+                if (searchBox.Text == "Axtarış edin")
+                {
+                    searchBox.Text = "";
+                    searchBox.ForeColor = Color.Black;  // Mətn daxil edildikdə rəng qara olur
+                }
+            };
+
+            // TextBox-dan çıxıldıqda, əgər istifadəçi heç bir şey daxil etməyibsə, placeholder yenidən görünür
+            searchBox.Leave += (s, ev) =>
+            {
+                if (string.IsNullOrWhiteSpace(searchBox.Text))
+                {
+                    searchBox.Text = "Axtarış edin";
+                    searchBox.ForeColor = Color.Gray;  // Placeholder rəngi yenidən açıq olur
+                }
+            };
+
+            scaleInfoContent.Controls.Add(searchBox);  // TextBox-u forma əlavə et
+            searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
+
+            PictureBox searchIcon = new PictureBox();
+            //searchIcon.Image = Image.FromFile("search-icon-png"); // Simgeyi yükləyin
+            searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; // Simgeyi uyğun ölçüdə göstər
+            searchIcon.Size = new Size(20, 20); // Simge ölçüsü
+            searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y + 10); // Simgeyi düzgün yerdə yerləşdir
+
+            // Simgeyə klikləmə hadisəsi əlavə et
+            searchIcon.Click += (s, ev) =>
+            {
+                MessageBox.Show("Axtarış etmək üçün simgeyə basıldı!");
+            };
+
+            // Simgeyi formaya əlavə et
+            scaleInfoContent.Controls.Add(searchIcon);
+
+
+            Button btnDelete = new Button();
+            btnDelete.Text = "Kartı sil";
+            btnDelete.Location = new Point(780, 12);
+            btnDelete.BackColor = Color.LightGray;
+            scaleInfoContent.Controls.Add(btnDelete);
+
+
+            Button btnNewMenu = new Button();
+            btnNewMenu.Text = "+Yeni kart";
+            btnNewMenu.Location = new Point(680, 12);
+            btnNewMenu.BackColor = Color.LightBlue;
+            btnNewMenu.Click += new EventHandler(btnNewMenu_Click);
+
+            scaleInfoContent.Controls.Add(btnNewMenu);
+
+
+
+
+
+
+
+            //scaleInfoContent.Controls.Add(topPanel);
+
+            if (listView == null)
+            {
+                listView = new ListView();
+                listView.View = View.Details;
+                listView.FullRowSelect = true;
+                listView.GridLines = true;
+                listView.Size = new Size(1150, 600);
+                listView.Location = new Point(10, 40);
+                listView.CheckBoxes = true;
+
+                listView.Columns.Add("Kart nömrəsi", 120);
+                listView.Columns.Add("Sürücü",120);
+                listView.Columns.Add("Avtomobil nömrəsi",160);
+                listView.Columns.Add("Avtomobil markası",160);
+                listView.Columns.Add("Avtomobil statusu",160);
+                listView.Columns.Add("Grade",160);
+
+                listView.OwnerDraw = true;
+
+                listView.DrawColumnHeader += (s, args) =>
+                {
+                    using (Font f = new Font("Segoe UI", 10, FontStyle.Bold)) // Bold font
+                    using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    {
+                        args.Graphics.FillRectangle(Brushes.White, args.Bounds); // ağ fon
+                        args.Graphics.DrawRectangle(Pens.LightGray, args.Bounds); // çərçivə xətti
+                        args.Graphics.DrawString(args.Header.Text, f, Brushes.Black, args.Bounds, sf); // mərkəzdə qara bold yazı
+                    }
+                };
+
+                // Item və SubItem-lar default göstərilsin
+                listView.DrawItem += (s, args) => args.DrawDefault = true;
+                listView.DrawSubItem += (s, args) => args.DrawDefault = true;
+
+
+                scaleInfoContent.Controls.Add(listView);
+
+
+
+
+            }
         }
+
+        private void btnNewMenu_Click(object sender, EventArgs e)
+        {
+            AddCard addCard = new AddCard(this);
+            addCard.ShowDialog(); // 
+        }
+
+        
+
+
     }
 }

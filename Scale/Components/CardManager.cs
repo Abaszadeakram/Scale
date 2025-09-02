@@ -13,7 +13,7 @@ namespace ScaleManagment.Components
         {
 
             // Panel təmizlənir
-            scaleInfoContent.Controls.Clear();
+           
 
             //
             // ===== Yuxarı panel (Search + Buttons) =====
@@ -75,11 +75,7 @@ namespace ScaleManagment.Components
 
         }
 
-        private  void btnNewww_Click(object sender, EventArgs e)
-        {
-            AddCard addCard = new AddCard(this);
-            addCard.ShowDialog();
-        }
+       
 
         //private void btnNeww_Click(object sender, EventArgs e)
         //{
@@ -136,38 +132,7 @@ namespace ScaleManagment.Components
 
         private static  void InitBottomData(ListView listView)
         {
-            listView.Dock = DockStyle.Fill;
-            listView.View = View.Details;
-            listView.FullRowSelect = true;
-            listView.GridLines = true;
-            listView.CheckBoxes = true; // Checkbox sütunu
-
-            // Sütunlar
-            listView.Columns.Add("", 30); // Checkbox üçün
-            listView.Columns.Add("Kart nömrəsi", 100);
-            listView.Columns.Add("Sürücü", 150);
-            listView.Columns.Add("Avtomobilin nömrəsi", 150);
-            listView.Columns.Add("Avtomobilin markası", 150);
-            listView.Columns.Add("Avtomobilin statusu", 150);
-            listView.Columns.Add("Grade", 150);
-
-            // Məlumat nümunələri
-            string[,] data =
-            {
-                {"4564564", "Royal Huseynov", "77JB456", "BMW", "Aktiv", "High quality gold"}
-            };
-
-            for (int i = 0; i < data.GetLength(0); i++)
-            {
-                ListViewItem item = new ListViewItem(); // Checkbox üçün boş sütun
-                item.SubItems.Add(data[i, 0]);
-                item.SubItems.Add(data[i, 1]);
-                item.SubItems.Add(data[i, 2]);
-                item.SubItems.Add(data[i, 3]);
-                item.SubItems.Add(data[i, 4]);
-                item.SubItems.Add(data[i, 5]);
-                listView.Items.Add(item);
-            }
+           
 
         }
         #endregion
