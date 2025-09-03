@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using TereziEla;
 
 namespace ScaleManagment
@@ -44,7 +45,7 @@ namespace ScaleManagment
             TextBox searchBox = new TextBox();
             searchBox.Size = new Size(130, 40);
             searchBox.BorderStyle = BorderStyle.None;
-            searchBox.Location = new Point(scaleInfoContent.Width - 870, 7);
+            searchBox.Location = new Point(scaleInfoContent.Width - 1240, 7);
 
             // İlk olaraq placeholder mətni əlavə edirik
             searchBox.Text = "Axtarış edin";
@@ -74,10 +75,17 @@ namespace ScaleManagment
             searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
 
             PictureBox searchIcon = new PictureBox();
-            //searchIcon.Image = Image.FromFile("search-icon-png"); // Simgeyi yükləyin
+            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png"); // Simgeyi yükləyin
             searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; // Simgeyi uyğun ölçüdə göstər
             searchIcon.Size = new Size(20, 20); // Simge ölçüsü
-            searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y + 10); // Simgeyi düzgün yerdə yerləşdir
+            searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y +8); // Simgeyi düzgün yerdə yerləşdir
+
+
+
+            //btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
+            //Image originalImage = btnExport.Image;
+            //Image resizedImage = new Bitmap(originalImage, new Size(originalImage.Width / 18, originalImage.Height / 18));  // Burada şəkili yarıya endiririk
+            //btnExport.Image = resizedImage;
 
             // Simgeyə klikləmə hadisəsi əlavə et
             searchIcon.Click += (s, ev) =>
@@ -123,12 +131,12 @@ namespace ScaleManagment
                 listView.View = View.Details;
                 listView.FullRowSelect = true;
                 listView.GridLines = true;
-                listView.Size = new Size(1150, 600);
+                listView.Size = new Size(1435, 820);
                 listView.Location = new Point(10, 40);
                 listView.CheckBoxes = true;
 
-                listView.Columns.Add("İstifadəçi adı", 90, HorizontalAlignment.Left);
-                listView.Columns.Add("Yaradılma tarixi", 670, HorizontalAlignment.Center);
+                listView.Columns.Add("İstifadəçi adı", 110, HorizontalAlignment.Left);
+                listView.Columns.Add("Yaradılma tarixi", 1100, HorizontalAlignment.Center);
 
                 listView.OwnerDraw = true;
 
@@ -184,18 +192,45 @@ namespace ScaleManagment
                 Label lblCount = new Label
                 {
                     Text = "Sətir sayı: " + listView.Items.Count,
-                    Location = new Point(12, -2),
+                    Location = new Point(12, -1),
                     AutoSize = true
                 };
 
                 // Səhifələmə düymələri
-                Button btnPrev = new Button { Text = "<", Location = new Point(300, -2), Width = 40 };
-                Button btnPage1 = new Button { Text = "1", Location = new Point(350, -2), Width = 40 };
-                Button btnPage2 = new Button { Text = "2", Location = new Point(400, -2), Width = 40 };
-                Button btnPage3 = new Button { Text = "3", Location = new Point(400, -2), Width = 40 };
-                Button btnPage4 = new Button { Text = "4", Location = new Point(400, -2), Width = 40 };
-                Button btnNext = new Button { Text = ">", Location = new Point(450, -2), Width = 40 };
+                Button btnPrev = new Button { Text = "<", Location = new Point(450, -1), Width = 20 };
+                btnPrev.FlatStyle = FlatStyle.Flat;
+                btnPrev.FlatAppearance.BorderSize = 0;
+                //btnPrev.FlatAppearance = BorderStyle.None;
+                Button btnPage1 = new Button { Text = "1", Location = new Point(500, -1), Width = 20 };
+                btnPage1.FlatStyle = FlatStyle.Flat;
+                btnPage1.FlatAppearance.BorderSize = 0;
+                Button btnPage2 = new Button { Text = "2", Location = new Point(550, -1), Width = 20 };
+                btnPage2.FlatStyle = FlatStyle.Flat;
+                btnPage2.FlatAppearance.BorderSize = 0;
+                Button btnPage3 = new Button { Text = "3", Location = new Point(600, -1), Width = 20 };
+                btnPage3.FlatStyle = FlatStyle.Flat;
+                btnPage3.FlatAppearance.BorderSize = 0;
+                Button btnPage4 = new Button { Text = "4", Location = new Point(650, -1), Width = 20 };
+                btnPage4.FlatStyle = FlatStyle.Flat;
+                btnPage4.FlatAppearance.BorderSize = 0;
+                Button btnNext = new Button { Text = ">", Location = new Point(700, -1), Width = 20 };
+                btnNext.FlatStyle = FlatStyle.Flat;
+                btnNext.FlatAppearance.BorderSize = 0;
 
+
+                Label lblSehife = new Label
+                {
+                    Text = "10/səhifə ",
+                    Location = new Point(1000, -1),
+                    AutoSize = true
+                };
+
+                Label lblSehifeyekecid = new Label
+                {
+                    Text = "Səhifəyə keç: ",
+                    Location = new Point(1100, -1),
+                    AutoSize = true
+                };
 
                 // Kontrol əlavə et
                 bottomPanel.Controls.Add(lblCount);
@@ -205,6 +240,8 @@ namespace ScaleManagment
                 bottomPanel.Controls.Add(btnPage3);
                 bottomPanel.Controls.Add(btnPage4);
                 bottomPanel.Controls.Add(btnNext);
+                bottomPanel.Controls.Add(lblSehife);
+                bottomPanel.Controls.Add(lblSehifeyekecid);
 
                 this.Controls.Add(bottomPanel);
             }
@@ -298,9 +335,10 @@ namespace ScaleManagment
             // Bir helper funksiya yazırıq ki, label+textbox düzülüşünü asan yaradaq
             Control CreateField(string label, string value)
             {
-                Panel p = new Panel { Dock = DockStyle.Fill };
+                Panel p = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0, 13, 0, 2) };
                 Label l = new Label { Text = label, Dock = DockStyle.Top, Font = labelFont, AutoSize = true };
-                TextBox t = new TextBox { Text = value, Dock = DockStyle.Bottom, Font = textFont };
+                p.BackColor = Color.FromArgb(249, 250, 251);
+                TextBox t = new TextBox { Text = value, Dock = DockStyle.Bottom, Font = textFont, BorderStyle = BorderStyle.None };
                 p.Controls.Add(t);
                 p.Controls.Add(l);
                 return p;
@@ -349,7 +387,7 @@ namespace ScaleManagment
                 FlatStyle = FlatStyle.Flat,
                 Width = 100,
                 Height = 30,
-                Location = new Point(lblOxuyucuyabagli.Right+190,lblOxuyucuyabagli.Top)
+                Location = new Point(lblOxuyucuyabagli.Right+570,lblOxuyucuyabagli.Top)
             };
 
             toggle.FlatAppearance.BorderSize = 0;
@@ -379,12 +417,12 @@ namespace ScaleManagment
             //toggle.BackColor = toggle.Checked ? Color.Gold : Color.LightGray;
 
             // Düymələr
-            Button btnBagla = new Button { Text = "Bağla", ForeColor = Color.Red, FlatStyle = FlatStyle.Flat, Location = new Point(515, 15), Width = 50 };
-            Button btnAc = new Button { Text = "Aç", ForeColor = Color.Green, FlatStyle = FlatStyle.Flat, Location = new Point(580, 15), Width = 30 };
-            Button btnTara = new Button { Text = "Tara", FlatStyle = FlatStyle.Flat,  Location = new Point(600, 15), Width = 60 };
+            Button btnBagla = new Button { Text = "Bağla", ForeColor = Color.Red, FlatStyle = FlatStyle.Flat, Location = new Point(900, 15), Width = 60 ,Height = 30 };
+            Button btnAc = new Button { Text = "Aç", ForeColor = Color.Green, FlatStyle = FlatStyle.Flat, Location = new Point(970, 15), Width = 40, Height = 30 };
+            Button btnTara = new Button { Text = "Tara", FlatStyle = FlatStyle.Flat,  Location = new Point(1000, 15), Width = 70, Height = 30 };
             btnTara.FlatAppearance.BorderSize = 0;
-            Button btnTesdiqla = new Button { Text = "Təsdiqlə", BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(660, 15), Width = 80 };
-            Button btnOxucu = new Button { Text = "Oxucuya bağlan", BackColor = Color.Goldenrod, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(750, 15), Width = 100 };
+            Button btnTesdiqla = new Button { Text = "Təsdiqlə", BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(1060, 15), Width = 90,Height=30 };
+            Button btnOxucu = new Button { Text = "Oxucuya bağlan", BackColor = Color.Goldenrod, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Location = new Point(1160, 15), Width = 110, Height = 30 };
 
             bottomPanel.Controls.AddRange(new Control[] { btnBagla, btnAc, btnTara, btnTesdiqla, btnOxucu });
 
@@ -418,16 +456,73 @@ namespace ScaleManagment
                 Width = 200
             };
 
-            Button btnExport = new Button
+            Button btnExport = new Button();
+            btnExport.Text = " File export";
+            btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
+            Image originalImage = btnExport.Image;
+            Image resizedImage = new Bitmap(originalImage, new Size(originalImage.Width / 18, originalImage.Height / 18));  // Burada şəkili yarıya endiririk
+            btnExport.Image = resizedImage;
+            btnExport.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnExport.Location = new Point(1100, 6);
+            btnExport.Width = 150; // Genişlik
+            btnExport.Height = 30;
+            //btnExport.Location = new Point(scaleInfoContent.Width - 250, 7);
+            btnExport.FlatStyle = FlatStyle.Flat;
+            //btnExport.FlatAppearance.BorderSize = 1;
+            btnExport.Font = new Font("Arial", 11);
+            btnExport.FlatAppearance.BorderSize = 0;
+            scaleInfoContent.Controls.Add(btnExport);
+
+            
+
+            TextBox searchBox = new TextBox();
+            searchBox.Size = new Size(130, 40);
+            searchBox.BorderStyle = BorderStyle.None;
+            searchBox.Location = new Point(scaleInfoContent.Width - 1250, 7);
+
+            // İlk olaraq placeholder mətni əlavə edirik
+            searchBox.Text = "Axtarış edin";
+            searchBox.ForeColor = Color.Gray;  // Placeholder mətni üçün açıq rəng
+
+            // TextBox daxil edildikdə placeholder mətni silinir
+            searchBox.Enter += (s, ev) =>
             {
-                Text = "File export",
-                Anchor = AnchorStyles.Right,
-                Location = new Point(600, 6),
-                Width = 100
+                if (searchBox.Text == "Axtarış edin")
+                {
+                    searchBox.Text = "";
+                    searchBox.ForeColor = Color.Black;  // Mətn daxil edildikdə rəng qara olur
+                }
             };
 
-            topPanel.Controls.Add(txtSearch);
+            // TextBox-dan çıxıldıqda, əgər istifadəçi heç bir şey daxil etməyibsə, placeholder yenidən görünür
+            searchBox.Leave += (s, ev) =>
+            {
+                if (string.IsNullOrWhiteSpace(searchBox.Text))
+                {
+                    searchBox.Text = "Axtarış edin";
+                    searchBox.ForeColor = Color.Gray;  // Placeholder rəngi yenidən açıq olur
+                }
+            };
+
+            scaleInfoContent.Controls.Add(searchBox);  // TextBox-u forma əlavə et
+            searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
+
+            PictureBox searchIcon = new PictureBox();
+            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png"); ; // Simgeyi yükləyin
+            searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; // Simgeyi uyğun ölçüdə göstər
+            searchIcon.Size = new Size(20, 20); // Simge ölçüsü
+            searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y + 10); // Simgeyi düzgün yerdə yerləşdir
+
+            // Simgeyə klikləmə hadisəsi əlavə et
+            searchIcon.Click += (s, ev) =>
+            {
+                MessageBox.Show("Axtarış etmək üçün simgeyə basıldı!");
+            };
+
+            // Simgeyi formaya əlavə et
+            scaleInfoContent.Controls.Add(searchIcon);
             topPanel.Controls.Add(btnExport);
+            scaleInfoContent.Controls.Add(btnExport);
 
             // --- ORTA HİSSƏ (ListView)
             ListView listView = new ListView
@@ -440,15 +535,37 @@ namespace ScaleManagment
             };
 
             // Sütunlar
-            listView.Columns.Add("Giriş çəkisi", 80);
-            listView.Columns.Add("Çıxış çəkisi", 80);
-            listView.Columns.Add("Ümumi çəki", 80);
-            listView.Columns.Add("Giriş tarixi", 100);
-            listView.Columns.Add("Çıxış tarixi", 100);
-            listView.Columns.Add("Kart", 80);
-            listView.Columns.Add("Grade", 100);
-            listView.Columns.Add("Post", 140);
-            listView.Columns.Add("Maşın nömrəsi", 100);
+            listView.Columns.Add("Giriş çəkisi", 120);
+            listView.Columns.Add("Çıxış çəkisi", 120);
+            listView.Columns.Add("Ümumi çəki", 150);
+            listView.Columns.Add("Giriş tarixi", 150);
+            listView.Columns.Add("Çıxış tarixi", 150);
+            listView.Columns.Add("Kart", 100);
+            listView.Columns.Add("Grade", 150);
+            listView.Columns.Add("Post", 150);
+            listView.Columns.Add("Maşın nömrəsi", 150);
+
+
+
+            listView.OwnerDraw = true;
+
+            listView.DrawColumnHeader += (s, args) =>
+            {
+                using (Font f = new Font("Segoe UI", 10, FontStyle.Bold)) // Qalın font
+                using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }) // Mərkəzləşdirilmiş yazı
+                {
+                    args.Graphics.FillRectangle(Brushes.White, args.Bounds); // Ağa fon
+                    args.Graphics.DrawRectangle(Pens.LightGray, args.Bounds); // Çərçivə xətləri
+                    args.Graphics.DrawString(args.Header.Text, f, Brushes.Black, args.Bounds, sf); // Mərkəzdə qalın yazı
+                }
+            };
+
+            // Item və SubItem-ların default olaraq göstərilməsi
+            listView.DrawItem += (s, args) => args.DrawDefault = true;
+            listView.DrawSubItem += (s, args) => args.DrawDefault = true;
+
+            // ListView-i kontenera əlavə et
+            scaleInfoContent.Controls.Add(listView);
 
             string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
@@ -494,23 +611,68 @@ namespace ScaleManagment
 
 
             // --- ALT HİSSƏ (Sütun sayı + səhifələmə)
-            Panel bottomPanel = new Panel { Dock = DockStyle.Fill };
+            Panel bottomPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 40
+            };
 
+            // Sətir sayı label
             Label lblCount = new Label
             {
                 Text = "Sətir sayı: " + listView.Items.Count,
-                Location = new Point(10, 10),
+                Location = new Point(12, -1),
                 AutoSize = true
             };
 
             // Səhifələmə düymələri
-            Button btnPrev = new Button { Text = "<", Location = new Point(300, 5), Width = 40 };
-            Button btnPage1 = new Button { Text = "1", Location = new Point(350, 5), Width = 40 };
-            Button btnPage2 = new Button { Text = "2", Location = new Point(400, 5), Width = 40 };
-            Button btnNext = new Button { Text = ">", Location = new Point(450, 5), Width = 40 };
+            Button btnPrev = new Button { Text = "<", Location = new Point(450, -1), Width = 20 };
+            btnPrev.FlatStyle = FlatStyle.Flat;
+            btnPrev.FlatAppearance.BorderSize = 0;
+            //btnPrev.FlatAppearance = BorderStyle.None;
+            Button btnPage1 = new Button { Text = "1", Location = new Point(500, -1), Width = 20 };
+            btnPage1.FlatStyle = FlatStyle.Flat;
+            btnPage1.FlatAppearance.BorderSize = 0;
+            Button btnPage2 = new Button { Text = "2", Location = new Point(550, -1), Width = 20 };
+            btnPage2.FlatStyle = FlatStyle.Flat;
+            btnPage2.FlatAppearance.BorderSize = 0;
+            Button btnPage3 = new Button { Text = "3", Location = new Point(600, -1), Width = 20 };
+            btnPage3.FlatStyle = FlatStyle.Flat;
+            btnPage3.FlatAppearance.BorderSize = 0;
+            Button btnPage4 = new Button { Text = "4", Location = new Point(650, -1), Width = 20 };
+            btnPage4.FlatStyle = FlatStyle.Flat;
+            btnPage4.FlatAppearance.BorderSize = 0;
+            Button btnNext = new Button { Text = ">", Location = new Point(700, -1), Width = 20 };
+            btnNext.FlatStyle = FlatStyle.Flat;
+            btnNext.FlatAppearance.BorderSize = 0;
 
+
+            Label lblSehife = new Label
+            {
+                Text = "10/səhifə ",
+                Location = new Point(1000, -1),
+                AutoSize = true
+            };
+
+            Label lblSehifeyekecid = new Label
+            {
+                Text = "Səhifəyə keç: ",
+                Location = new Point(1100, -1),
+                AutoSize = true
+            };
+
+            // Kontrol əlavə et
             bottomPanel.Controls.Add(lblCount);
-            bottomPanel.Controls.AddRange(new Control[] { btnPrev, btnPage1, btnPage2, btnNext });
+            bottomPanel.Controls.Add(btnPrev);
+            bottomPanel.Controls.Add(btnPage1);
+            bottomPanel.Controls.Add(btnPage2);
+            bottomPanel.Controls.Add(btnPage3);
+            bottomPanel.Controls.Add(btnPage4);
+            bottomPanel.Controls.Add(btnNext);
+            bottomPanel.Controls.Add(lblSehife);
+            bottomPanel.Controls.Add(lblSehifeyekecid);
+
+            this.Controls.Add(bottomPanel);
 
             // Əlavə et Layout-a
             mainLayout.Controls.Add(topPanel, 0, 0);
@@ -542,19 +704,77 @@ namespace ScaleManagment
             {
                 //PlaceholderText = "Axtarış edin",
                 Location = new Point(10, 8),
+
                 Width = 200
             };
 
-            Button btnExport = new Button
+            Button btnExport = new Button();
+            btnExport.Text = " File export";
+            btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
+            Image originalImage = btnExport.Image;
+            Image resizedImage = new Bitmap(originalImage, new Size(originalImage.Width / 18, originalImage.Height / 18));  // Burada şəkili yarıya endiririk
+            btnExport.Image = resizedImage;
+            btnExport.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnExport.Location = new Point(1100, 6);
+            btnExport.Width = 150; // Genişlik
+            btnExport.Height = 30;
+            //btnExport.Location = new Point(scaleInfoContent.Width - 250, 7);
+            btnExport.FlatStyle = FlatStyle.Flat;
+            //btnExport.FlatAppearance.BorderSize = 1;
+            btnExport.Font = new Font("Arial", 11);
+            btnExport.FlatAppearance.BorderSize = 0;
+            scaleInfoContent.Controls.Add(btnExport);
+
+
+
+            TextBox searchBox = new TextBox();
+            searchBox.Size = new Size(130, 40);
+            searchBox.BorderStyle = BorderStyle.None;
+            searchBox.Location = new Point(scaleInfoContent.Width - 1250, 7);
+
+            // İlk olaraq placeholder mətni əlavə edirik
+            searchBox.Text = "Axtarış edin";
+            searchBox.ForeColor = Color.Gray;  // Placeholder mətni üçün açıq rəng
+
+            // TextBox daxil edildikdə placeholder mətni silinir
+            searchBox.Enter += (s, ev) =>
             {
-                Text = "File export",
-                Anchor = AnchorStyles.Right,
-                Location = new Point(600, 6),
-                Width = 100
+                if (searchBox.Text == "Axtarış edin")
+                {
+                    searchBox.Text = "";
+                    searchBox.ForeColor = Color.Black;  // Mətn daxil edildikdə rəng qara olur
+                }
             };
 
-            topPanel.Controls.Add(txtSearch);
+            // TextBox-dan çıxıldıqda, əgər istifadəçi heç bir şey daxil etməyibsə, placeholder yenidən görünür
+            searchBox.Leave += (s, ev) =>
+            {
+                if (string.IsNullOrWhiteSpace(searchBox.Text))
+                {
+                    searchBox.Text = "Axtarış edin";
+                    searchBox.ForeColor = Color.Gray;  // Placeholder rəngi yenidən açıq olur
+                }
+            };
+
+            scaleInfoContent.Controls.Add(searchBox);  // TextBox-u forma əlavə et
+            searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
+
+            PictureBox searchIcon = new PictureBox();
+            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
+            searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; // Simgeyi uyğun ölçüdə göstər
+            searchIcon.Size = new Size(20, 20); // Simge ölçüsü
+            searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y + 10); // Simgeyi düzgün yerdə yerləşdir
+
+            // Simgeyə klikləmə hadisəsi əlavə et
+            searchIcon.Click += (s, ev) =>
+            {
+                MessageBox.Show("Axtarış etmək üçün simgeyə basıldı!");
+            };
+
+            // Simgeyi formaya əlavə et
+            scaleInfoContent.Controls.Add(searchIcon);
             topPanel.Controls.Add(btnExport);
+            scaleInfoContent.Controls.Add(btnExport);
 
             // --- ORTA HİSSƏ (ListView)
             ListView listView = new ListView
@@ -567,15 +787,37 @@ namespace ScaleManagment
             };
 
             // Sütunlar
-            listView.Columns.Add("Giriş çəkisi", 80);
-            listView.Columns.Add("Çıxış çəkisi", 80);
-            listView.Columns.Add("Ümumi çəki", 80);
-            listView.Columns.Add("Giriş tarixi", 110);
-            listView.Columns.Add("Çıxış tarixi", 110);
-            listView.Columns.Add("Kart", 80);
-            listView.Columns.Add("Grade", 100);
-            listView.Columns.Add("Post", 120);
-            listView.Columns.Add("Maşın nömrəsi", 100);
+            listView.Columns.Add("Giriş çəkisi", 120);
+            listView.Columns.Add("Çıxış çəkisi", 120);
+            listView.Columns.Add("Ümumi çəki", 150);
+            listView.Columns.Add("Giriş tarixi", 150);
+            listView.Columns.Add("Çıxış tarixi", 150);
+            listView.Columns.Add("Kart", 100);
+            listView.Columns.Add("Grade", 150);
+            listView.Columns.Add("Post", 150);
+            listView.Columns.Add("Maşın nömrəsi", 150);
+
+
+
+            listView.OwnerDraw = true;
+
+            listView.DrawColumnHeader += (s, args) =>
+            {
+                using (Font f = new Font("Segoe UI", 10, FontStyle.Bold)) // Qalın font
+                using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }) // Mərkəzləşdirilmiş yazı
+                {
+                    args.Graphics.FillRectangle(Brushes.White, args.Bounds); // Ağa fon
+                    args.Graphics.DrawRectangle(Pens.LightGray, args.Bounds); // Çərçivə xətləri
+                    args.Graphics.DrawString(args.Header.Text, f, Brushes.Black, args.Bounds, sf); // Mərkəzdə qalın yazı
+                }
+            };
+
+            // Item və SubItem-ların default olaraq göstərilməsi
+            listView.DrawItem += (s, args) => args.DrawDefault = true;
+            listView.DrawSubItem += (s, args) => args.DrawDefault = true;
+
+            // ListView-i kontenera əlavə et
+            scaleInfoContent.Controls.Add(listView);
 
             string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
@@ -617,23 +859,68 @@ namespace ScaleManagment
                 reader.Close();
             }
             // --- ALT HİSSƏ (Sütun sayı + səhifələmə)
-            Panel bottomPanel = new Panel { Dock = DockStyle.Fill };
+            Panel bottomPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 40
+            };
 
+            // Sətir sayı label
             Label lblCount = new Label
             {
                 Text = "Sətir sayı: " + listView.Items.Count,
-                Location = new Point(10, 10),
+                Location = new Point(12, -1),
                 AutoSize = true
             };
 
             // Səhifələmə düymələri
-            Button btnPrev = new Button { Text = "<", Location = new Point(300, 5), Width = 40 };
-            Button btnPage1 = new Button { Text = "1", Location = new Point(350, 5), Width = 40 };
-            Button btnPage2 = new Button { Text = "2", Location = new Point(400, 5), Width = 40 };
-            Button btnNext = new Button { Text = ">", Location = new Point(450, 5), Width = 40 };
+            Button btnPrev = new Button { Text = "<", Location = new Point(450, -1), Width = 20 };
+            btnPrev.FlatStyle = FlatStyle.Flat;
+            btnPrev.FlatAppearance.BorderSize = 0;
+            //btnPrev.FlatAppearance = BorderStyle.None;
+            Button btnPage1 = new Button { Text = "1", Location = new Point(500, -1), Width = 20 };
+            btnPage1.FlatStyle = FlatStyle.Flat;
+            btnPage1.FlatAppearance.BorderSize = 0;
+            Button btnPage2 = new Button { Text = "2", Location = new Point(550, -1), Width = 20 };
+            btnPage2.FlatStyle = FlatStyle.Flat;
+            btnPage2.FlatAppearance.BorderSize = 0;
+            Button btnPage3 = new Button { Text = "3", Location = new Point(600, -1), Width = 20 };
+            btnPage3.FlatStyle = FlatStyle.Flat;
+            btnPage3.FlatAppearance.BorderSize = 0;
+            Button btnPage4 = new Button { Text = "4", Location = new Point(650, -1), Width = 20 };
+            btnPage4.FlatStyle = FlatStyle.Flat;
+            btnPage4.FlatAppearance.BorderSize = 0;
+            Button btnNext = new Button { Text = ">", Location = new Point(700, -1), Width = 20 };
+            btnNext.FlatStyle = FlatStyle.Flat;
+            btnNext.FlatAppearance.BorderSize = 0;
 
+
+            Label lblSehife = new Label
+            {
+                Text = "10/səhifə ",
+                Location = new Point(1000, -1),
+                AutoSize = true
+            };
+
+            Label lblSehifeyekecid = new Label
+            {
+                Text = "Səhifəyə keç: ",
+                Location = new Point(1100, -1),
+                AutoSize = true
+            };
+
+            // Kontrol əlavə et
             bottomPanel.Controls.Add(lblCount);
-            bottomPanel.Controls.AddRange(new Control[] { btnPrev, btnPage1, btnPage2, btnNext });
+            bottomPanel.Controls.Add(btnPrev);
+            bottomPanel.Controls.Add(btnPage1);
+            bottomPanel.Controls.Add(btnPage2);
+            bottomPanel.Controls.Add(btnPage3);
+            bottomPanel.Controls.Add(btnPage4);
+            bottomPanel.Controls.Add(btnNext);
+            bottomPanel.Controls.Add(lblSehife);
+            bottomPanel.Controls.Add(lblSehifeyekecid);
+
+            this.Controls.Add(bottomPanel);
 
             // Əlavə et Layout-a
             mainLayout.Controls.Add(topPanel, 0, 0);
@@ -643,6 +930,8 @@ namespace ScaleManagment
             // Panel2-yə əlavə et
             scaleInfoContent.Controls.Add(mainLayout);
         }
+
+
 
         
 
@@ -803,13 +1092,34 @@ namespace ScaleManagment
 
         private void button5_Click(object sender, EventArgs e)
         {
-            scaleInfoContent.Controls.Clear();
+           scaleInfoContent.Controls.Clear();
+
+            // Əsas Layout
+            TableLayoutPanel mainLayout = new TableLayoutPanel();
+            mainLayout.Dock = DockStyle.Fill;
+            mainLayout.RowCount = 3;
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40)); // Üst hissə
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); // Orta hissə (cədvəl)
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40)); // Alt hissə
+
+            // --- ÜST HİSSƏ (Search + Export düyməsi)
+            Panel topPanel = new Panel { Dock = DockStyle.Fill };
+
+            TextBox txtSearch = new TextBox
+            {
+                //PlaceholderText = "Axtarış edin",
+                Location = new Point(10, 8),
+
+                Width = 200
+            };
+
+           
 
 
             TextBox searchBox = new TextBox();
             searchBox.Size = new Size(130, 40);
             searchBox.BorderStyle = BorderStyle.None;
-            searchBox.Location = new Point(scaleInfoContent.Width - 870, 7);
+            searchBox.Location = new Point(scaleInfoContent.Width - 1250, 7);
 
             // İlk olaraq placeholder mətni əlavə edirik
             searchBox.Text = "Axtarış edin";
@@ -839,7 +1149,7 @@ namespace ScaleManagment
             searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
 
             PictureBox searchIcon = new PictureBox();
-            //searchIcon.Image = Image.FromFile("search-icon-png"); // Simgeyi yükləyin
+            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
             searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; // Simgeyi uyğun ölçüdə göstər
             searchIcon.Size = new Size(20, 20); // Simge ölçüsü
             searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 25, searchBox.Location.Y + 10); // Simgeyi düzgün yerdə yerləşdir
@@ -856,69 +1166,182 @@ namespace ScaleManagment
 
             Button btnDelete = new Button();
             btnDelete.Text = "Kartı sil";
-            btnDelete.Location = new Point(780, 12);
-            btnDelete.BackColor = Color.LightGray;
+            btnDelete.Size = new Size(90, 32);
+            btnDelete.Location = new Point(1060, -1);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.BackColor = Color.White;
             scaleInfoContent.Controls.Add(btnDelete);
 
 
             Button btnNewMenu = new Button();
-            btnNewMenu.Text = "+Yeni kart";
-            btnNewMenu.Location = new Point(680, 12);
-            btnNewMenu.BackColor = Color.LightBlue;
+            btnNewMenu.Text = "+ Yeni kart";
+            btnNewMenu.Size = new Size(90, 32);
+            btnNewMenu.Location = new Point(1165, -1);
+            btnNewMenu.FlatStyle = FlatStyle.Flat;
+            btnNewMenu.FlatAppearance.BorderSize = 0;
+            btnNewMenu.BackColor = Color.FromArgb(223,199,78);
             btnNewMenu.Click += new EventHandler(btnNewMenu_Click);
-
+            btnNewMenu.ForeColor = Color.White;
             scaleInfoContent.Controls.Add(btnNewMenu);
 
 
-
-
-
-
-
-            //scaleInfoContent.Controls.Add(topPanel);
-
-            if (listView == null)
+            // --- ORTA HİSSƏ (ListView)
+            ListView listView = new ListView
             {
-                listView = new ListView();
-                listView.View = View.Details;
-                listView.FullRowSelect = true;
-                listView.GridLines = true;
-                listView.Size = new Size(1150, 600);
-                listView.Location = new Point(10, 40);
-                listView.CheckBoxes = true;
+                Dock = DockStyle.Fill,
+                View = View.Details,
+                FullRowSelect = true,
+                GridLines = true,
+                CheckBoxes = true
+            };
 
-                listView.Columns.Add("Kart nömrəsi", 120);
-                listView.Columns.Add("Sürücü",120);
-                listView.Columns.Add("Avtomobil nömrəsi",160);
-                listView.Columns.Add("Avtomobil markası",160);
-                listView.Columns.Add("Avtomobil statusu",160);
-                listView.Columns.Add("Grade",160);
+            // Sütunlar
+            listView.Columns.Add("Kart nömrəsi", 200);
+            listView.Columns.Add("Sürücü", 200);
+            listView.Columns.Add("Avtomobil nömrəsi", 200);
+            listView.Columns.Add("Avtomobil markası", 200);
+            listView.Columns.Add("Avtomobil statusu", 200);
+            
+            listView.Columns.Add("Grade", 200);
+           
 
-                listView.OwnerDraw = true;
 
-                listView.DrawColumnHeader += (s, args) =>
+            listView.OwnerDraw = true;
+
+            listView.DrawColumnHeader += (s, args) =>
+            {
+                using (Font f = new Font("Segoe UI", 10, FontStyle.Bold)) // Qalın font
+                using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center }) // Mərkəzləşdirilmiş yazı
                 {
-                    using (Font f = new Font("Segoe UI", 10, FontStyle.Bold)) // Bold font
-                    using (StringFormat sf = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
-                    {
-                        args.Graphics.FillRectangle(Brushes.White, args.Bounds); // ağ fon
-                        args.Graphics.DrawRectangle(Pens.LightGray, args.Bounds); // çərçivə xətti
-                        args.Graphics.DrawString(args.Header.Text, f, Brushes.Black, args.Bounds, sf); // mərkəzdə qara bold yazı
-                    }
-                };
+                    args.Graphics.FillRectangle(Brushes.White, args.Bounds); // Ağa fon
+                    args.Graphics.DrawRectangle(Pens.LightGray, args.Bounds); // Çərçivə xətləri
+                    args.Graphics.DrawString(args.Header.Text, f, Brushes.Black, args.Bounds, sf); // Mərkəzdə qalın yazı
+                }
+            };
 
-                // Item və SubItem-lar default göstərilsin
-                listView.DrawItem += (s, args) => args.DrawDefault = true;
-                listView.DrawSubItem += (s, args) => args.DrawDefault = true;
+            // Item və SubItem-ların default olaraq göstərilməsi
+            listView.DrawItem += (s, args) => args.DrawDefault = true;
+            listView.DrawSubItem += (s, args) => args.DrawDefault = true;
 
+            // ListView-i kontenera əlavə et
+            scaleInfoContent.Controls.Add(listView);
 
-                scaleInfoContent.Controls.Add(listView);
+            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "select*from dbo.gates";
 
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
 
+                while (reader.Read())
+                {
+                    string giris = reader["weight_in"].ToString();
+                    string cixis = reader["weight_out"].ToString();
+                    string umumiceki = reader["weight_total"].ToString();
 
+                    DateTime girisTarixi = Convert.ToDateTime(reader["data_in"]);
+                    DateTime cixisTarixi = Convert.ToDateTime(reader["data_out"]);
+
+                    string kart = reader["card"].ToString();
+                    string grade = reader["sort"].ToString();
+                    string post = reader["post"].ToString();
+                    string masin = reader["carnumber"].ToString();
+
+                    ListViewItem item = new ListViewItem(giris);
+                    item.SubItems.Add(cixis);
+                    item.SubItems.Add(umumiceki);
+                    item.SubItems.Add(girisTarixi.ToString("dd.MM.yyyy HH:mm"));
+                    item.SubItems.Add(cixisTarixi.ToString("dd.MM.yyyy HH:mm"));
+                    item.SubItems.Add(kart);
+                    item.SubItems.Add(grade);
+                    item.SubItems.Add(post);
+                    item.SubItems.Add(masin);
+
+                    listView.Items.Add(item);
+                }
+
+                reader.Close();
             }
+            // --- ALT HİSSƏ (Sütun sayı + səhifələmə)
+            Panel bottomPanel = new Panel
+            {
+                Dock = DockStyle.Bottom,
+                Height = 40
+            };
+
+            // Sətir sayı label
+            Label lblCount = new Label
+            {
+                Text = "Sətir sayı: " + listView.Items.Count,
+                Location = new Point(12, -1),
+                AutoSize = true
+            };
+
+            // Səhifələmə düymələri
+            Button btnPrev = new Button { Text = "<", Location = new Point(450, -1), Width = 20 };
+            btnPrev.FlatStyle = FlatStyle.Flat;
+            btnPrev.FlatAppearance.BorderSize = 0;
+            //btnPrev.FlatAppearance = BorderStyle.None;
+            Button btnPage1 = new Button { Text = "1", Location = new Point(500, -1), Width = 20 };
+            btnPage1.FlatStyle = FlatStyle.Flat;
+            btnPage1.FlatAppearance.BorderSize = 0;
+            Button btnPage2 = new Button { Text = "2", Location = new Point(550, -1), Width = 20 };
+            btnPage2.FlatStyle = FlatStyle.Flat;
+            btnPage2.FlatAppearance.BorderSize = 0;
+            Button btnPage3 = new Button { Text = "3", Location = new Point(600, -1), Width = 20 };
+            btnPage3.FlatStyle = FlatStyle.Flat;
+            btnPage3.FlatAppearance.BorderSize = 0;
+            Button btnPage4 = new Button { Text = "4", Location = new Point(650, -1), Width = 20 };
+            btnPage4.FlatStyle = FlatStyle.Flat;
+            btnPage4.FlatAppearance.BorderSize = 0;
+            Button btnNext = new Button { Text = ">", Location = new Point(700, -1), Width = 20 };
+            btnNext.FlatStyle = FlatStyle.Flat;
+            btnNext.FlatAppearance.BorderSize = 0;
+
+
+            Label lblSehife = new Label
+            {
+                Text = "10/səhifə ",
+                Location = new Point(1000, -1),
+                AutoSize = true
+            };
+
+            Label lblSehifeyekecid = new Label
+            {
+                Text = "Səhifəyə keç: ",
+                Location = new Point(1100, -1),
+                AutoSize = true
+            };
+
+            // Kontrol əlavə et
+            bottomPanel.Controls.Add(lblCount);
+            bottomPanel.Controls.Add(btnPrev);
+            bottomPanel.Controls.Add(btnPage1);
+            bottomPanel.Controls.Add(btnPage2);
+            bottomPanel.Controls.Add(btnPage3);
+            bottomPanel.Controls.Add(btnPage4);
+            bottomPanel.Controls.Add(btnNext);
+            bottomPanel.Controls.Add(lblSehife);
+            bottomPanel.Controls.Add(lblSehifeyekecid);
+
+            this.Controls.Add(bottomPanel);
+
+            // Əlavə et Layout-a
+            mainLayout.Controls.Add(topPanel, 0, 0);
+            mainLayout.Controls.Add(listView, 0, 1);
+            mainLayout.Controls.Add(bottomPanel, 0, 2);
+
+            // Panel2-yə əlavə et
+            scaleInfoContent.Controls.Add(mainLayout);
+
         }
+
+        
+        
 
         private void btnNewMenu_Click(object sender, EventArgs e)
         {
@@ -926,8 +1349,67 @@ namespace ScaleManagment
             addCard.ShowDialog(); // 
         }
 
-        
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            DateTimePicker dtpStartDate = new DateTimePicker();
+            dtpStartDate.Format = DateTimePickerFormat.Short; // Tarix formatını qısa göstər
+            dtpStartDate.Size = new Size(150, 32); // Ölçü
+            dtpStartDate.Location = new Point(120, 5); // Başlanğıc tarixinin yerləşdiyi yer
+            dtpStartDate.Value = DateTime.Now;
+            //dtpStartDate.Text = "Baslama";
+            // Default olaraq bu günkü tarixi seçmək
+            scaleInfoContent.Controls.Add(dtpStartDate); // Panele əlavə et
 
 
+            Label lblStartDate = new Label();
+            lblStartDate.Text = "Başlanğıc tarix";  // Etmək istədiyiniz mətni buraya əlavə edin
+            lblStartDate.Size = new Size(150, 32);
+            lblStartDate.Location = new Point(30, 5);  // Labelin yeri
+            scaleInfoContent.Controls.Add(lblStartDate);
+
+
+            // Bitmə tarixi seçici
+            DateTimePicker dtpEndDate = new DateTimePicker();
+            dtpEndDate.Format = DateTimePickerFormat.Short; // Tarix formatını qısa göstər
+            dtpEndDate.Size = new Size(150, 32); // Ölçü
+            dtpEndDate.Location = new Point(360, 5); // Bitmə tarixinin yerləşdiyi yer
+            dtpEndDate.Value = DateTime.Now.AddDays(7); // Default olaraq bu günün 7 gün sonrası
+            scaleInfoContent.Controls.Add(dtpEndDate); // Panele əlavə et
+
+
+            Label lblendDate = new Label();
+            lblendDate.Text = "Bitmə tarixi";  // Etmək istədiyiniz mətni buraya əlavə edin
+            lblendDate.Size = new Size(150, 32);
+            lblendDate.Location = new Point(280, 5);  // Labelin yeri
+            scaleInfoContent.Controls.Add(lblendDate);
+
+
+            Button btnDelete = new Button();
+            btnDelete.Text = "Tarix aralığı ilə sinxronlaşdır";
+            btnDelete.Size = new Size(150, 32);
+            btnDelete.Location = new Point(870, -1);
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.BackColor = Color.White;
+            scaleInfoContent.Controls.Add(btnDelete);
+
+
+            Button btnNewMenu = new Button();
+            btnNewMenu.Text = "Qalan məlumatları sinxronlaşdır";
+            btnNewMenu.Size = new Size(180, 32);
+            btnNewMenu.Location = new Point(1055, -1);
+            btnNewMenu.FlatStyle = FlatStyle.Flat;
+            btnNewMenu.FlatAppearance.BorderSize = 0;
+            btnNewMenu.BackColor = Color.FromArgb(223, 199, 78);
+            btnNewMenu.Click += new EventHandler(btnNewMenu_Click);
+            btnNewMenu.ForeColor = Color.White;
+            scaleInfoContent.Controls.Add(btnNewMenu);
+
+        }
     }
 }
