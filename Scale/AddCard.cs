@@ -1,5 +1,5 @@
 ﻿using ScaleManagment;
-using ScaleManagment.Components;
+
 using System;
 using System.Windows.Forms;
 
@@ -17,12 +17,9 @@ namespace TereziEla
 
         }
 
-        public AddCard(CardManager cardManager)
-        {
-            CardManager = cardManager;
-        }
+     
 
-        public CardManager CardManager { get; }
+       
 
         private void button1_Click(object sender, EventArgs e)
         {

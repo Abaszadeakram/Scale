@@ -54,7 +54,7 @@
             // 
             // textBox9
             // 
-            this.textBox9.Location = new System.Drawing.Point(14, 269);
+            this.textBox9.Location = new System.Drawing.Point(348, 332);
             this.textBox9.Multiline = true;
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(316, 30);
@@ -72,7 +72,7 @@
             // 
             // textBox8
             // 
-            this.textBox8.Location = new System.Drawing.Point(348, 136);
+            this.textBox8.Location = new System.Drawing.Point(15, 332);
             this.textBox8.Multiline = true;
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(316, 30);
@@ -119,6 +119,7 @@
             this.button3.TabIndex = 45;
             this.button3.Text = "Yadda saxla";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -135,7 +136,7 @@
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(350, 332);
+            this.textBox7.Location = new System.Drawing.Point(346, 269);
             this.textBox7.Multiline = true;
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(314, 30);
@@ -153,7 +154,7 @@
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(14, 332);
+            this.textBox6.Location = new System.Drawing.Point(14, 269);
             this.textBox6.Multiline = true;
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(318, 30);
@@ -171,7 +172,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(349, 269);
+            this.textBox5.Location = new System.Drawing.Point(347, 199);
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(315, 30);
@@ -189,7 +190,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(348, 199);
+            this.textBox4.Location = new System.Drawing.Point(14, 199);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(315, 30);
@@ -207,7 +208,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(15, 199);
+            this.textBox3.Location = new System.Drawing.Point(347, 136);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(316, 30);
