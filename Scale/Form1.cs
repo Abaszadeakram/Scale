@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1722,6 +1723,14 @@ namespace ScaleManagment
             btnNewMenu.ForeColor = Color.White;
             scaleInfoContent.Controls.Add(btnNewMenu);
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            int radius = 5;  // Radius dəyərini istədiyiniz ölçüdə təyin edin.
+            GraphicsPath path = new GraphicsPath();
+            path.AddEllipse(0, 0, button8.Width, button8.Height);
+            button8.Region = new Region(path);
         }
     }
 }
