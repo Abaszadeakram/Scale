@@ -80,7 +80,9 @@ namespace ScaleManagment
             searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
 
             PictureBox searchIcon = new PictureBox();
-            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png"); 
+            string path = Application.StartupPath + @"\Resources\magnifying-glass-icon-isolated-on-white-background-search-illustration-vector (1).jpg";
+            searchIcon.Image = Image.FromFile(path);
+            
             searchIcon.SizeMode = PictureBoxSizeMode.StretchImage; 
             searchIcon.Size = new Size(30, 30); 
             searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 2, searchBox.Location.Y - 8); 
@@ -161,7 +163,7 @@ namespace ScaleManagment
 
                 scaleInfoContent.Controls.Add(listView);
 
-                string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
+                string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=Qeydiyyatdb;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -511,7 +513,7 @@ namespace ScaleManagment
 
             Button btnExport = new Button();
             btnExport.Text = " File export";
-            btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
+            //btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
             Image originalImage = btnExport.Image;
             Image resizedImage = new Bitmap(originalImage, new Size(originalImage.Width / 18, originalImage.Height / 18));  // Burada şəkili yarıya endiririk
             btnExport.Image = resizedImage;
@@ -564,7 +566,7 @@ namespace ScaleManagment
             searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
 
             PictureBox searchIcon = new PictureBox();
-            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
+            //searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
             searchIcon.SizeMode = PictureBoxSizeMode.StretchImage;
             searchIcon.Size = new Size(30, 30);
             searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 2, searchBox.Location.Y - 8);
@@ -630,7 +632,7 @@ namespace ScaleManagment
 
 
             scaleInfoContent.Controls.Add(listView);
-            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -792,7 +794,7 @@ namespace ScaleManagment
 
             Button btnExport = new Button();
             btnExport.Text = " File export";
-            btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
+            //btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
             Image originalImage = btnExport.Image;
             Image resizedImage = new Bitmap(originalImage, new Size(originalImage.Width / 18, originalImage.Height / 18));  
             btnExport.Image = resizedImage;
@@ -843,7 +845,7 @@ namespace ScaleManagment
             searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
 
             PictureBox searchIcon = new PictureBox();
-            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
+            //searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
             searchIcon.SizeMode = PictureBoxSizeMode.StretchImage;
             searchIcon.Size = new Size(30, 30);
             searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 2, searchBox.Location.Y - 8);
@@ -909,7 +911,7 @@ namespace ScaleManagment
 
             scaleInfoContent.Controls.Add(listView);
 
-            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -1093,7 +1095,7 @@ namespace ScaleManagment
 
             Button btnExport = new Button();
             btnExport.Text = " Export";
-            btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
+            //btnExport.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\images (5).png");
             Image originalImage = btnExport.Image;
             Image resizedImage = new Bitmap(originalImage, new Size(originalImage.Width / 18, originalImage.Height / 18));  // Burada şəkili yarıya endiririk
             btnExport.Image = resizedImage;
@@ -1274,7 +1276,7 @@ namespace ScaleManagment
 
             scaleInfoContent.Controls.Add(listView);
 
-            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=ABASOV-194\\SQL1;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -1438,7 +1440,7 @@ namespace ScaleManagment
             searchBox.TextChanged += new EventHandler(SearchBox_TextChanged);
 
             PictureBox searchIcon = new PictureBox();
-            searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
+            //searchIcon.Image = Image.FromFile("C:\\Users\\Akbar\\Documents\\pictures\\search-icon-2-614x460.png");
             searchIcon.SizeMode = PictureBoxSizeMode.StretchImage;
             searchIcon.Size = new Size(30, 30);
             searchIcon.Location = new Point(searchBox.Location.X + searchBox.Width - 2, searchBox.Location.Y - 8);
@@ -1521,7 +1523,7 @@ namespace ScaleManagment
 
             scaleInfoContent.Controls.Add(listView);
 
-            string connectionString = "Data Source=DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
+            string connectionString = "Data Source=ABASOV-194\\SQL1DESKTOP-IQB2C7N\\SQLEXPRESS;Initial Catalog=erp_azmaind;User ID=sa;Password=Scale123+-;Encrypt=True;TrustServerCertificate=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
